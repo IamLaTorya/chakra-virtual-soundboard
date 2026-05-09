@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Virtual Chakra Soundboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <main>
+        <h1 class="logo">
+            <img src="assets/images/logo.png" alt="logo">
+        </h1>
+        <p class="split-text">
+            <span>Press A–J or tap the pads to activate/cancel chakra sounds.</span>
+            <span>Let each glow be a breath, a prayer, a pulse of energy.</span>
+        </p>
+        <section id="soundboard">
+            <ul class="keys">
+                <!--Crown Chakra-->
+                <li data-key="a" class="key" data-chakra="crown">
+                    <kbd>A</kbd>
+                    <span class="sound">Crown</span>
+                    <span class="countdown"></span>
+                </li>
+                <!--Third Eye Chakara-->
+                <li data-key="s" class="key" data-chakra="third-eye">
+                    <kbd>S</kbd>
+                    <span class="sound">Third Eye</span>
+                    <span class="countdown"></span>
+                </li>
+                <!--Throat Chakra-->
+                <li data-key="d" class="key" data-chakra="throat">
+                    <kbd>D</kbd>
+                    <span class="sound">Throat</span>
+                    <span class="countdown"></span>
+                </li>
+                <!--Heart Chakra-->
+                <li data-key="f" class="key" data-chakra="heart">
+                    <kbd>F</kbd>
+                    <span class="sound">Heart</span>
+                    <span class="countdown"></span>
+                </li>
+                <!--Solar Plexus Chakra-->
+                <li data-key="g" class="key" data-chakra="solar">
+                    <kbd>G</kbd>
+                    <span class="sound">Solar</span>
+                    <span class="countdown"></span>
+                </li>
+                <!--Sacral Chakra-->
+                <li data-key="h" class="key" data-chakra="sacral">
+                    <kbd>H</kbd>
+                    <span class="sound">Sacral</span>
+                    <span class="countdown"></span>
+                </li>
+                <!--Root Chakra-->
+                <li data-key="j" class="key" data-chakra="root">
+                    <kbd>J</kbd>
+                    <span class="sound">Root</span>
+                    <span class="countdown"></span>
+                </li>
+            </ul>
+        </section>
+    </main>
+    <footer>
+        <p>2026 | Created by: LaTorya Hoyle-Sadler for MCA powered by NeXT</p>
+    </footer>
+    <!--Audio-->
+    <audio data-key="a" src="assets/sounds/singing-bowl-crown.mp3"></audio>
+    <audio data-key="s" src="assets/sounds/singing-bowl-third-eye.mp3"></audio>
+    <audio data-key="d" src="assets/sounds/singing-bowl-throat.mp3"></audio>
+    <audio data-key="f" src="assets/sounds/singing-bowl-heart.mp3"></audio>
+    <audio data-key="g" src="assets/sounds/singing-bowl-solar-plexus.mp3"></audio>
+    <audio data-key="h" src="assets/sounds/singing-bowl-sacral.mp3"></audio>
+    <audio data-key="j" src="assets/sounds/singing-bowl-root.mp3"></audio>
+    <script src="script.js"></script>
+</body>
+</html>

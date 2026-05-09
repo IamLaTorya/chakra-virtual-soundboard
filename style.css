@@ -1,0 +1,216 @@
+/* ROOT VARIABLES — global theme colors for easy reuse */
+:root {
+    --bg-color: #1a1a2e;
+    --key-color: #ffffff;
+    --glow-color: #00d4ff;
+    --text-color: #e2e8f0;
+}
+
+/* BODY STYLING — background image, layout, centering */
+body {
+    /* Full-screen background image */
+    background: url("https://images.unsplash.com/photo-1695041404407-e1afde845b33?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fGNhbmRsZSUyMGxpZ2h0fGVufDB8fDB8fHww") no-repeat center center;
+    background-size: cover;
+    background-attachment: fixed;
+
+    /* Remove default spacing */
+    margin: 0;
+    padding: 0;
+
+    /* Make body fill the screen and prevent scrolling */
+    height: 100vh;
+    overflow: hidden;
+
+    /* Stack everything from top to bottom */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    /* Remove vertical centering so logo stays at top */
+    justify-content: flex-start;
+
+    /* Global font + text color */
+    font-family: system-ui, sans-serif;
+    color: var(--text-color);
+}
+
+/* LOGO AREA — centers logo and adjusts spacing */
+.logo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    /* Adjust vertical spacing around the logo */
+    margin-top: -2rem;
+    margin-bottom: 0.5rem;
+}
+
+.logo img {
+    /* Keep logo large but responsive */
+    max-width: 400px;
+    height: auto;
+    display: block;
+    top: 0;
+}
+
+/* SPLIT TEXT — the two words under the logo */
+.split-text {
+    width: 100%;
+    max-width: 900px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 1rem;
+    color: var(--key-color);
+    margin-bottom: -2rem;
+}
+
+/* KEYS CONTAINER — layout chakra buttons */
+.keys {
+    display: flex;
+    flex-wrap: wrap;
+    /* Allows wrapping on smaller screens */
+    gap: 1.5rem;
+    /* Space between keys */
+    padding: 0;
+    /* Remove default UL padding */
+    list-style: none;
+    /* Remove bullets */
+    margin-top: 6rem;
+    /* Space below the split text */
+    /* margin-bottom: -5rem; */
+}
+
+/* INDIVIDUAL KEY BUTTONS — styling for each chakra key */
+.key {
+    border: 0.2rem solid #4b5563;
+    border-radius: 0.9rem;
+    padding: 0.7rem 0.8em;
+    width: 5rem;
+    text-align: center;
+    color: var(--text-color);
+    background: var(--bg-color);
+
+    /* Glow + animation transitions */
+    transition:
+        transform 0.12s ease,
+        box-shadow 0.12s ease,
+        border-color 0.12s ease;
+
+    cursor: pointer;
+
+    /* Prevent text selection while tapping */
+    -webkit-user-selected: none;
+}
+
+/* KEY LABEL — the keyboard letter (A, S, D…) */
+kbd {
+    display: block;
+    font-size: 1.4rem;
+    font-weight: bold;
+    letter-spacing: 0.08em;
+}
+
+/* SOUND LABEL — the chakra name under the letter */
+.sound {
+    display: block;
+    margin-top: 0.25rem;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.16rem;
+    color: #9ca3af;
+}
+
+/* PLAYING STATE — glow + scale when key is activated */
+.playing {
+    transform: scale(1.05);
+    border-color: var(--chakra-color);
+    box-shadow: 0 0 1.5rem var(--chakra-color);
+}
+
+/* COUNTDOWN TIMER — seconds remaining display */
+.countdown {
+    font-size: 0.75rem;
+    margin-top: 0.1rem;
+    color: #e2e8f0;
+    opacity: 0.8;
+}
+
+/* CHAKRA COLORS — dynamic glow colors per chakra */
+.key[data-chakra="root"] {
+    --chakra-color: #E53935;
+}
+
+.key[data-chakra="sacral"] {
+    --chakra-color: #FB8C00;
+}
+
+.key[data-chakra="solar"] {
+    --chakra-color: #FDD835;
+}
+
+.key[data-chakra="heart"] {
+    --chakra-color: #43A047;
+}
+
+.key[data-chakra="throat"] {
+    --chakra-color: #1E88E5;
+}
+
+.key[data-chakra="third-eye"] {
+    --chakra-color: #8E24AA;
+}
+
+.key[data-chakra="crown"] {
+    --chakra-color: #CE93D8;
+}
+
+footer {
+    position: absolute;
+    bottom: 0;
+}
+
+/* MOBILE RESPONSIVE LAYOUT — activates under 480px
+(keeps original design but adapts for phones) */
+@media (max-width: 480px) {
+
+    /* Convert keys into a responsive grid */
+    .keys {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+        gap: 12px;
+        width: 100%;
+        padding: 10px;
+    }
+
+    /* Larger tap targets for mobile */
+    .keys li {
+        padding: 18px;
+        border-radius: 12px;
+        text-align: center;
+    }
+
+    /* Bigger keyboard letter */
+    .keys li kbd {
+        font-size: 1.3rem;
+        margin-bottom: 4px;
+    }
+
+    /* Bigger chakra label */
+    .keys li .sound {
+        font-size: 1rem;
+        margin-top: 4px;
+    }
+
+    /* Bigger countdown text */
+    .countdown {
+        font-size: 1rem;
+        margin-top: 6px;
+        opacity: 0.9;
+    }
+
+    /* Add padding so content isn’t flush to edges */
+    body {
+        padding: 10px;
+        margin: 0;
+    }
+}
