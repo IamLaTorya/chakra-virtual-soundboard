@@ -1,170 +1,168 @@
-// Function to handle the sound, toggle mode, glow, countdown, and looping
+/* FUNCTION: playSound()
+Handles: glow, toggle mode, looping, countdown, fade-out */
 function playSound(key) {
 
-    // Select the audio element using the semantic data-key
+    // Select the audio element that matches the pressed key
     const audio = document.querySelector(`audio[data-key="${key}"]`);
 
-    // Select the <li> element for the visual key
+    // Select the visual <li> key element
     const keyItem = document.querySelector(`li[data-key="${key}"]`);
 
-    // Select the countdown display inside the key
+    // Select the countdown text inside the key
     const countdownDisplay = keyItem.querySelector('.countdown');
 
-    // Guard Clause: Exit if no audio or key element exists
+    // Stop if the key or audio doesn't exist
     if (!audio || !keyItem) return;
 
-    // ---------------------------------------------------------
-    // ALWAYS show the glow when the button is clicked
-    // ---------------------------------------------------------
+/* GLOW EFFECT — always flash when clicked */
 
-    // Add the visual "playing" class
+    // Add the glowing "playing" class
     keyItem.classList.add('playing');
 
-    // Remove the playing class after the animation
+    // Remove the glow after the animation finishes
     setTimeout(() => keyItem.classList.remove('playing'), 100);
 
-    // ---------------------------------------------------------
-    // TOGGLE MODE: If this sound is already looping, stop it
-    // ---------------------------------------------------------
+/* TOGGLE MODE — if already looping, stop it */
     if (audio.isLooping) {
 
-        // Stop the loop and fade out
+        // Stop the loop and reset visuals
         stopLoop(audio, countdownDisplay);
 
         // Do not start a new loop
         return;
     }
 
-    // Mark this audio as looping
+/* START LOOPING — mark audio as active */
+
+    // Mark this audio as currently looping
     audio.isLooping = true;
 
-    // Reset audio so it can play instantly again
+    // Reset audio to the beginning
     audio.currentTime = 0;
 
-    // Ensure the sound starts at full volume
+    // Ensure full volume at start
     audio.volume = 1;
 
     // Play the sound immediately
     audio.play();
 
-    // ---------------------------------------------------------
-    // COUNTDOWN TIMER — show seconds remaining
-    // ---------------------------------------------------------
+/* 
+REAL‑TIME COUNTDOWN (no drift, no lag)
+Uses Date.now() + requestAnimationFrame() */
 
-    // Start at 60 seconds
-    let secondsRemaining = 60;
+    // Set the exact time when the loop should end (60 seconds)
+    const endTime = Date.now() + 60000;
 
-    // Display the countdown immediately
-    countdownDisplay.textContent = `${secondsRemaining}s`;
+    // Function that updates the countdown smoothly
+    function updateCountdown() {
 
-    // Update the countdown every second
-    audio.countdownInterval = setInterval(() => {
-
-        // Reduce the seconds
-        secondsRemaining--;
-
-        // Update the display
-        countdownDisplay.textContent = `${secondsRemaining}s`;
-
-        // When countdown hits 0, stop updating
-        if (secondsRemaining <= 0) {
-            clearInterval(audio.countdownInterval);
-        }
-
-    }, 1000);
-
-    // ---------------------------------------------------------
-    // LOOP LOGIC — play the sound repeatedly for 1 minute
-    // ---------------------------------------------------------
-
-    // Store the time when looping should stop (60 seconds from now)
-    let loopEndTime = Date.now() + 60000;
-
-    // Save the loopEndTime on the audio so stopLoop() can access it
-    audio.loopEndTime = loopEndTime;
-
-    // Function that handles repeating the sound
-    function loopAudio() {
-
-        // If looping was canceled manually, stop immediately
+        // Stop updating if the user toggles the sound off
         if (!audio.isLooping) return;
 
-        // If the current time has passed the loop end time...
+        // Calculate how many milliseconds remain
+        const remaining = Math.max(0, endTime - Date.now());
+
+        // Convert remaining time to whole seconds
+        const seconds = Math.floor(remaining / 1000);
+
+        // Update the countdown text
+        countdownDisplay.textContent = `${seconds}s`;
+
+        // If time remains, keep updating every animation frame
+        if (remaining > 0) {
+            requestAnimationFrame(updateCountdown);
+
+        // If time is up, clear the countdown
+        } else {
+            countdownDisplay.textContent = "";
+        }
+    }
+
+    // Start the countdown loop
+    updateCountdown();
+
+/* LOOP LOGIC — repeat audio until 60 seconds is up */
+
+    // Save the end time so loopAudio() can check it
+    audio.loopEndTime = endTime;
+
+    // Function that restarts the audio when it ends
+    function loopAudio() {
+
+        // Stop immediately if user toggled off
+        if (!audio.isLooping) return;
+
+        // If time is up, fade out and stop looping
         if (Date.now() >= audio.loopEndTime) {
 
-            // Fade out gently
+            // Begin soft fade-out
             fadeOut(audio);
 
-            // Mark as stopped
+            // Mark as no longer looping
             audio.isLooping = false;
 
-            // Remove countdown
+            // Remove countdown text
             countdownDisplay.textContent = "";
 
             return;
         }
 
-        // Otherwise, restart the sound from the beginning
+        // Restart the sound from the beginning
         audio.currentTime = 0;
         audio.play();
 
-        // When the sound finishes, call loopAudio again
+        // When the sound ends, call loopAudio again
         audio.onended = loopAudio;
     }
 
-    // Start the looping process
+    // Begin the looping process
     loopAudio();
 }
 
-// ---------------------------------------------------------
-// STOP LOOPING IMMEDIATELY (toggle off)
-// ---------------------------------------------------------
+/* FUNCTION: stopLoop()
+Stops looping immediately when user toggles off */
 function stopLoop(audio, countdownDisplay) {
 
-    // Mark this audio as no longer looping
+    // Mark audio as no longer looping
     audio.isLooping = false;
 
-    // Stop the loop callback immediately
+    // Remove any pending loop callback
     audio.onended = null;
 
-    // Stop the countdown timer
-    clearInterval(audio.countdownInterval);
-
-    // Remove countdown text
+    // Clear countdown text
     countdownDisplay.textContent = "";
 
-    // Pause the sound immediately
+    // Stop audio instantly
     audio.pause();
 
-    // Reset playback position so fade-out starts cleanly
+    // Reset playback position
     audio.currentTime = 0;
 
-    // Start a soft fade-out (sound will finish only the tiny buffered slice)
+    // Optional: fade out instead of instant stop
     // fadeOut(audio);
 }
 
-// ---------------------------------------------------------
-// SOFT FADE-OUT FUNCTION
-// ---------------------------------------------------------
+/* FUNCTION: fadeOut()
+Softly reduces volume over time for a gentle stop */
 function fadeOut(audio) {
 
-    // How long the fade-out should last (8 seconds)
+    // Total fade-out duration (8 seconds)
     let fadeDuration = 8000;
 
-    // How often we reduce the volume (every 50ms)
+    // How often to reduce volume (every 50ms)
     let fadeStep = 50;
 
-    // How much volume to subtract each step
+    // Amount of volume to subtract each step
     let fadeAmount = audio.volume / (fadeDuration / fadeStep);
 
-    // Repeatedly lower the volume until it reaches zero
+    // Interval that gradually lowers the volume
     let fadeInterval = setInterval(() => {
 
-        // If there's still volume left, reduce it
+        // If volume is still above zero, reduce it
         if (audio.volume - fadeAmount > 0) {
             audio.volume -= fadeAmount;
 
-        // Otherwise, stop the sound completely
+        // Otherwise, stop completely
         } else {
             audio.volume = 0;
             audio.pause();
@@ -174,18 +172,14 @@ function fadeOut(audio) {
     }, fadeStep);
 }
 
-// ---------------------------------------------------------
-// KEYBOARD SUPPORT
-// ---------------------------------------------------------
+/* KEYBOARD SUPPORT — press A, S, D, etc. */
 window.addEventListener('keydown', function (event) {
 
     // Convert key to lowercase so "A" and "a" both work
     playSound(event.key.toLowerCase());
 });
 
-// ---------------------------------------------------------
-// CLICK SUPPORT
-// ---------------------------------------------------------
+/* CLICK SUPPORT — tap or click a chakra key */
 document.querySelector('.keys').addEventListener('click', function (event) {
 
     // Find the closest <li> with a data-key attribute

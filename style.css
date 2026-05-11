@@ -5,79 +5,104 @@
     --glow-color: #00d4ff;
     --text-color: #e2e8f0;
 }
+/*Global Reset*/
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+/*This locks the layout so it never shifts upward again.*/
+html, body {
+    height: 100%;
+    overflow-x: hidden; /* prevents sideways drift */
+}
 
 /* BODY STYLING — background image, layout, centering */
 body {
-    /* Full-screen background image */
+    /* Background */
     background: url("https://images.unsplash.com/photo-1695041404407-e1afde845b33?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fGNhbmRsZSUyMGxpZ2h0fGVufDB8fDB8fHww") no-repeat center center;
-    background-size: cover;
+    background-size: contain;
     background-attachment: fixed;
-
-    /* Remove default spacing */
-    margin: 0;
-    padding: 0;
-
-    /* Make body fill the screen and prevent scrolling */
-    height: 100vh;
-    overflow: hidden;
-
-    /* Stack everything from top to bottom */
+    background-color: black;
+    position: top center;
+    padding: 0 5px;
+    /* FLEX LAYOUT */
     display: flex;
     flex-direction: column;
     align-items: center;
-
-    /* Remove vertical centering so logo stays at top */
-    justify-content: flex-start;
-
-    /* Global font + text color */
-    font-family: system-ui, sans-serif;
+    justify-content: flex-start; /* ensures logo stays at the top */
+    /* This is the magic line */
+    height: 100dvh;
+    overflow: hidden;
+}
+/*children (main, body) container of body*/
+.main {
+    /* background-color: red; */
+    flex: 1;/*shrink, grow, and basis height of parent container*/
+    max-width: fit-content;
+    margin: 0 auto;
+}
+.footer {
+    max-width: fit-content;
+    margin: 0 auto;
+    font-size: small;
+    text-align: center;
     color: var(--text-color);
 }
-
 /* LOGO AREA — centers logo and adjusts spacing */
 .logo {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    /* Adjust vertical spacing around the logo */
-    margin-top: -2rem;
-    margin-bottom: 0.5rem;
+    width: 300px;
+    margin: 0 auto 0.5rem;
 }
 
 .logo img {
-    /* Keep logo large but responsive */
-    max-width: 400px;
+    width: 100%;
     height: auto;
     display: block;
-    top: 0;
 }
 
 /* SPLIT TEXT — the two words under the logo */
 .split-text {
     width: 100%;
-    max-width: 900px;
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    padding: 0 10px;
     font-size: 1rem;
     color: var(--key-color);
-    margin-bottom: -2rem;
+    margin-bottom: 2rem;
 }
-
+.split-text span {
+    /* text-align: center; */
+    display: block;
+}
+.text1 {
+    margin-right: 15px;
+    display: block;
+}
+.text2 {
+    margin-left: 15px;
+}
+#soundboard {
+    /* background-color: red; */
+    display: flex;
+    direction: column;
+    justify-content: flex-end;
+    overflow: hidden;
+    min-height: 200px;
+}
+/*children container of soundboard*/
 /* KEYS CONTAINER — layout chakra buttons */
 .keys {
+    /* background-color: blue; */
     display: flex;
-    flex-wrap: wrap;
-    /* Allows wrapping on smaller screens */
+    justify-content: space-between;
+    align-items: flex-end;
+    /* flex-wrap: wrap; */
     gap: 1.5rem;
-    /* Space between keys */
-    padding: 0;
-    /* Remove default UL padding */
     list-style: none;
-    /* Remove bullets */
-    margin-top: 6rem;
-    /* Space below the split text */
-    /* margin-bottom: -5rem; */
+    /* padding: 0 0 120px 0; */
+    overflow: hidden;
 }
 
 /* INDIVIDUAL KEY BUTTONS — styling for each chakra key */
@@ -97,9 +122,10 @@ body {
         border-color 0.12s ease;
 
     cursor: pointer;
-
     /* Prevent text selection while tapping */
     -webkit-user-selected: none;
+    /* Prevent double taps, ghost clicks, zooming on tap */
+    touch-action: manipulation;
 }
 
 /* KEY LABEL — the keyboard letter (A, S, D…) */
@@ -164,53 +190,43 @@ kbd {
     --chakra-color: #CE93D8;
 }
 
-footer {
-    position: absolute;
-    bottom: 0;
-}
-
-/* MOBILE RESPONSIVE LAYOUT — activates under 480px
-(keeps original design but adapts for phones) */
 @media (max-width: 480px) {
 
-    /* Convert keys into a responsive grid */
+    .logo img{
+        max-width: 300px;
+    }
     .keys {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
-        gap: 12px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
         width: 100%;
-        padding: 10px;
+        padding: 10px 10px 100px 10px;
+        margin-top: 0.5rem;
+        overflow-y: auto;
     }
 
-    /* Larger tap targets for mobile */
-    .keys li {
-        padding: 18px;
-        border-radius: 12px;
-        text-align: center;
+    .key {
+        padding: 10px 6px;
+        width: auto; /* allow grid to size naturally */
     }
 
-    /* Bigger keyboard letter */
-    .keys li kbd {
-        font-size: 1.3rem;
-        margin-bottom: 4px;
+    kbd {
+        font-size: 1.1rem;
     }
 
-    /* Bigger chakra label */
-    .keys li .sound {
-        font-size: 1rem;
-        margin-top: 4px;
+    .sound {
+        font-size: 0.75rem;
     }
 
-    /* Bigger countdown text */
+    /* Countdown readable on small screens */
     .countdown {
-        font-size: 1rem;
+        font-size: 0.9rem;
         margin-top: 6px;
         opacity: 0.9;
     }
 
-    /* Add padding so content isn’t flush to edges */
-    body {
-        padding: 10px;
-        margin: 0;
-    }
+    /* Add padding so footer never overlaps */
+    /* body {
+        padding-bottom: 120px;
+    } */
 }
