@@ -1,4 +1,6 @@
-/* ROOT VARIABLES — global theme colors for easy reuse */
+/* ROOT VARIABLES — reusable theme colors for the whole site
+Stores global colors it can change the theme in one place.
+These variables are used throughout the CSS. */
 :root {
     --bg-color: #1a1a2e;
     --key-color: #ffffff;
@@ -6,7 +8,9 @@
     --text-color: #e2e8f0;
 }
 
-/*Global Reset*/
+/* GLOBAL RESET — removes default browser spacing
+Ensures padding and borders are included in element size.
+Also removes default margins and padding from all elements. */
 *,
 *::before,
 *::after {
@@ -15,248 +19,343 @@
     padding: 0;
 }
 
-/*This locks the layout so it never shifts upward again.*/
+/* HTML + BODY — sets up full-height layout
+Makes the HTML and body stretch to full height.*/
 html,
 body {
+    /* This helps the layout fill the entire screen. */
     height: 100%;
-    /* overflow-x: hidden; */
-    /* prevents sideways drift */
 }
 
-/* BODY STYLING — background image, layout, centering */
+/* BODY — background + main layout container
+This shows if the image fails to load. */
 body {
+    /* Sets a solid black background behind everything. */
     background-color: black;
-    /* This is the magic line */
+    /* Makes the body at least as tall as the visible screen.
+       Uses dvh so mobile browsers don’t shift the layout. */
     min-height: 100dvh;
+    /* Allows vertical scrolling if needed but blocks horizontal scrolling.
+       This prevents sideways movement on small screens. */
     overflow: auto hidden;
 }
-.section{
+
+/* SECTION — main centered container with background image*/
+.section {
+    /* Limits the width so content doesn’t stretch too wide. */
     max-width: 1000px;
-    margin: 0 auto;
+    margin: 0 auto; /* Centers the section on large screens. */
+    /* Makes the section fill the available width and height. 
+    Helps the layout stay consistent. */
     width: 100%;
     height: 100%;
-    /* Background */
-    background: url("https://images.unsplash.com/photo-1695041404407-e1afde845b33?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fGNhbmRsZSUyMGxpZ2h0fGVufDB8fDB8fHww") no-repeat center center;
+    /* Sets the background image for the main content.
+       The image stays centered and does not repeat. */
+    background: url("https://images.unsplash.com/photo-1695041404407-e1afde845b33?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fGNhbmRsZSUyMGxpZ2h0fGVufDB8fDB8fHww")
+        no-repeat center center;
+    /* Makes the background image scale to fit inside the container.
+    This prevents cropping. */
     background-size: contain;
+    /* Keeps the background image fixed while content scrolls.
+       Creates a subtle parallax effect. */
     background-attachment: fixed;
-    position: top center;
+    /* Adds small horizontal padding so content doesn’t touch the edges.
+       Helps readability on small screens. */
     padding: 0 5px;
-    /* FLEX LAYOUT */
+    /* Turns the section into a vertical flex container.
+       This allows easy stacking of logo, text, and keys. */
     display: flex;
     flex-direction: column;
+    /* Centers children horizontally.
+       Keeps everything aligned in the middle. */
     align-items: center;
+    /* Aligns children to the top instead of the center.
+       Prevents content from floating in the middle. */
     justify-content: flex-start;
-
 }
-/*children (main, body) container of body*/
+
+/* MAIN */
 .main {
-    /* background-color: red; */
-    flex: 1;
-    /*shrink, grow, and basis height of parent container*/
+    flex: 1; /* flexible middle area that grows/shrinks */
+    /* Allows the main content to expand and fill leftover space. */
     width: 100%;
     height: 100%;
-    margin: 0 auto;
+    margin: 0 auto; /* This helps the footer stay at the bottom. */
 }
 
+/* FOOTER — sits at the bottom of the section */
 .footer {
-    width: 100%;
+    width: 100%;/* Makes the footer span the full width.*/
+       /* Centers the text inside it. */
     margin: 0 auto;
-    font-size: small;
     text-align: center;
+    /* Uses the theme text color.
+       Keeps footer readable on dark backgrounds. */
     color: var(--text-color);
+    /* Adds space above and below the footer text.
+       Makes it easier to tap on mobile. */
     padding: 10px 0;
+    /* Prevents the footer from shrinking.
+       Ensures it always stays visible. */
     flex-shrink: 0;
-    /* background-color: red; */
 }
 
-/* LOGO AREA — centers logo and adjusts spacing */
+/*LOGO — centered image at the top */
+/* Sets the width of the logo container.
+   Centers it with auto margins. */
 .logo {
     width: 300px;
     margin: 0 auto 0.5rem;
 }
 
+/* Makes the logo image scale to fit its container.
+   Keeps the aspect ratio correct. */
 .logo img {
     width: 100%;
     height: auto;
     display: block;
 }
 
-/* SPLIT TEXT — the two words under the logo */
+/* SPLIT TEXT — two words under the logo */
 .split-text {
     width: 100%;
     display: grid;
+    /* Creates a two-column layout for the split text. */
     grid-template-columns: 1fr 1fr;
+     /* Adds spacing between the two words. */
     gap: 30px;
+    /* Adds small padding on the sides.
+       Helps readability on mobile. */
     padding: 0 10px;
+    /* Sets the text size and color.
+       Uses the theme color for consistency. */
     font-size: 1rem;
     color: var(--key-color);
+    /* Adds space below the split text.
+       Separates it from the keys. */
     margin-bottom: 2rem;
 }
 
+/* Makes each split-text item a block.
+   Helps with alignment. */
 .split-text span {
-    /* text-align: center; */
     display: block;
 }
 
+/* Aligns the left word to the right.
+   Creates the “split” effect. */
 .text1 {
-    /* margin-right: 15px; */
-    display: block;
     text-align: right;
 }
 
+/* Adds spacing to the right word.
+   Helps balance the layout. */
 .text2 {
     margin-left: 15px;
 }
 
+/* SOUNDBOARD WRAPPER — holds the keys grid */
 #soundboard {
-    /* background-color: red; */
+    /* Turns the soundboard into a vertical flex container.
+   Helps align the keys inside it. */
     display: flex;
-    direction: column;
+    flex-direction: column;
+    /* Aligns content to the bottom.
+       Helps the grid sit lower on the page. */
     justify-content: flex-end;
+    /* Prevents content from spilling out.
+       Keeps layout clean. */
     overflow: hidden;
+    /* Sets a minimum height so the area doesn’t collapse.
+       Helps maintain spacing. */
     min-height: 100px;
+    /* Adds vertical spacing above and below the soundboard.
+       Helps separate it from other elements. */
     margin: 60px 0;
+    /* background-color: red; */
 }
 
-/*children container of soundboard*/
-/* KEYS CONTAINER — layout chakra buttons */
+/* KEYS GRID — responsive chakra buttons layout */
 .keys {
     /* background-color: blue; */
+    /* Turns the keys container into a grid.
+   Automatically arranges keys into rows and columns. */
     display: grid;
+    /* Creates as many columns as will fit.
+       Each column must be at least 120px wide. */
     grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-    /* grid-template-columns: repeat(7, minmax(0, 1fr)); */
-    align-items: start;
-    /* justify-content: space-between; */
-    /* align-items: flex-end; */
-    /* flex-wrap: wrap; */
+    /* Adds space between keys.
+       Prevents them from touching. */
     gap: 1.5rem;
+    /* Removes default list bullets.
+       Keeps layout clean. */
     list-style: none;
-    overflow: hidden;
+    /* Makes the grid fill the available width.
+       Helps the layout stay balanced. */
     width: 100%;
+    /* Makes the grid fill the available height.
+       Helps the layout stretch properly. */
     height: 100%;
+    /* Hides anything that overflows.
+       Prevents layout glitches. */
+    overflow: hidden;
+    /*Gives more space for the glow to be seen*/
+    padding: 3px;
 }
 
-/* INDIVIDUAL KEY BUTTONS — styling for each chakra key */
+/* INDIVIDUAL KEY — chakra button styling*/
 .key {
+    /* Adds a thick gray border around each key.
+   Helps visually separate each button. */
     border: 0.2rem solid #4b5563;
+    /* Rounds the corners of the key.
+       Makes the design look softer. */
     border-radius: 0.9rem;
+    /* Adds space inside the key.
+       Keeps text from touching the edges. */
     padding: 0.8rem 2rem;
+    /* Makes the key fill the width of its grid column.
+       Ensures consistent sizing. */
     width: 100%;
-    /* height: 100%; */
+    /* Centers the text inside the key.
+       Keeps labels balanced. */
     text-align: center;
+    /* Sets the text color using the theme.
+       Ensures readability on dark backgrounds. */
     color: var(--text-color);
+    /* Sets the background color of the key.
+       Uses the theme variable for consistency. */
     background: var(--bg-color);
+    /* Prevents text from wrapping onto multiple lines.
+       Keeps labels clean. */
     white-space: nowrap;
-    /* Glow + animation transitions */
-    transition:
+    /* Adds smooth animation for glow and scale effects.
+       Makes interactions feel responsive. */
+    /* transition:
         transform 0.12s ease,
         box-shadow 0.12s ease,
-        border-color 0.12s ease;
-
+        border-color 0.12s ease; */
+    /* Changes the cursor to a pointer.
+       Shows the key is clickable. */
     cursor: pointer;
-    /* Prevent text selection while tapping */
+    /* Prevents text selection when tapping.
+       Makes the key feel like a real button. */
     -webkit-user-selected: none;
-    /* Prevent double taps, ghost clicks, zooming on tap */
+    /* Improves mobile tapping accuracy.
+       Prevents double taps and ghost clicks. */
     touch-action: manipulation;
 }
 
-/* KEY LABEL — the keyboard letter (A, S, D…) */
+/* KEY LABEL — keyboard letter (A, S, D…) */
 kbd {
+    /* Displays the letter on its own line.
+   Makes it easier to style. */
     display: block;
+    /* Makes the letter larger and bold.
+       Helps users see the key mapping. */
     font-size: 1.4rem;
     font-weight: bold;
+    /* Adds spacing between letters.
+       Improves readability. */
     letter-spacing: 0.08em;
 }
 
-/* SOUND LABEL — the chakra name under the letter */
+/* SOUND LABEL — chakra name under the letter */
 .sound {
+    /* Displays the chakra name on its own line.
+   Keeps layout clean. */
     display: block;
+    /* Adds space above the chakra name.
+       Separates it from the letter. */
     margin-top: 0.25rem;
+    /* Sets the font size and color.
+       Uses a softer gray for subtlety. */
     font-size: 0.7rem;
     text-transform: uppercase;
     color: #9ca3af;
 }
 
-/* PLAYING STATE — glow + scale when key is activated */
+/* PLAYING STATE — glow when key is active */
 .playing {
-    /* transform: scale(1.05); */
+    /* Changes the border color to the chakra color.
+   Adds a glowing effect around the key. */
     border-color: var(--chakra-color);
     box-shadow: 0 0 1.5rem var(--chakra-color);
 }
 
-/* COUNTDOWN TIMER — seconds remaining display */
+/* COUNTDOWN TIMER — seconds remaining */
 .countdown {
-    font-size: 0.75rem;
+    /* Sets the size and color of the countdown text.
+   Makes it readable but not overpowering. */
+    font-size: 0.85rem;
     margin-top: 0.1rem;
     color: #e2e8f0;
     opacity: 0.8;
 }
 
-/* CHAKRA COLORS — dynamic glow colors per chakra */
-.key[data-chakra="root"] {
-    --chakra-color: #E53935;
-}
+/* CHAKRA COLORS — dynamic glow per chakra */
+/* Each chakra key gets its own glow color.
+   These colors match traditional chakra themes. */
+.key[data-chakra="root"] { --chakra-color: #E53935; }
+.key[data-chakra="sacral"] { --chakra-color: #FB8C00; }
+.key[data-chakra="solar"] { --chakra-color: #FDD835; }
+.key[data-chakra="heart"] { --chakra-color: #43A047; }
+.key[data-chakra="throat"] { --chakra-color: #1E88E5; }
+.key[data-chakra="third-eye"] { --chakra-color: #8E24AA; }
+.key[data-chakra="crown"] { --chakra-color: #CE93D8; }
 
-.key[data-chakra="sacral"] {
-    --chakra-color: #FB8C00;
-}
-
-.key[data-chakra="solar"] {
-    --chakra-color: #FDD835;
-}
-
-.key[data-chakra="heart"] {
-    --chakra-color: #43A047;
-}
-
-.key[data-chakra="throat"] {
-    --chakra-color: #1E88E5;
-}
-
-.key[data-chakra="third-eye"] {
-    --chakra-color: #8E24AA;
-}
-
-.key[data-chakra="crown"] {
-    --chakra-color: #CE93D8;
-}
-
-
+/* MOBILE RESPONSIVE — fits iPhone 6, SE, 360px, 320px */
 @media (max-width: 480px) {
-
+    /* Makes the logo smaller on mobile.
+       Helps it fit on narrow screens. */
     .logo {
-    width: 200px;
-}
+        width: 200px;
+    }
 
+    /* Creates a 4-column grid on small screens.
+       Ensures keys stay readable. */
     .keys {
         grid-template-columns: repeat(4, minmax(0, 1fr));
         width: 100%;
+        /* Adds a small top margin.
+           Prevents keys from touching the split text. */
         margin-top: 0.5rem;
+        /* Allows the keys to scroll internally if needed.
+           Prevents the whole page from scrolling. */
         overflow-y: auto;
     }
 
+    /* Reduces padding inside each key.
+       Helps fit more keys on small screens. */
     .key {
         padding: 10px 6px;
-        text-align: center;
         width: auto;
+        text-align: center;
     }
 
+    /* Makes the keyboard letter slightly smaller.
+       Keeps it readable on small screens. */
     kbd {
         font-size: 1.1rem;
     }
 
+    /* Slightly increases chakra label size.
+       Improves readability on mobile. */
     .sound {
         font-size: 0.75rem;
     }
 
-    /* Countdown readable on small screens */
+    /* Makes countdown text larger.
+       Helps users see the timer clearly. */
     .countdown {
         font-size: 0.9rem;
         margin-top: 6px;
         opacity: 0.9;
     }
 
+    /* Adds more padding to the footer on mobile.
+       Makes it easier to tap. */
     .footer {
-        padding: 20px 0;/*top right bottom left*/
+        padding: 20px 0;
     }
 }

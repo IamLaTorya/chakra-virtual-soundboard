@@ -1,82 +1,115 @@
 <!DOCTYPE html>
+<!-- Declares the document type and language for accessibility and SEO -->
 <html lang="en">
-
 <head>
+    <!-- Sets the character encoding so the browser displays text correctly -->
     <meta charset="UTF-8">
+    <!-- Ensures the layout scales properly on mobile devices -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Sets the title that appears in the browser tab -->
     <title>The Virtual Chakra Soundboard</title>
+    <!-- Links the external CSS file so the page uses the styles -->
     <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
+    <!-- Wraps the entire visible layout inside a styled container -->
     <section class="section">
-    <main class="main">
-        <h1 class="logo">
-            <img src="assets/images/logo.png" alt="logo">
-        </h1>
-        <p class="split-text">
-            <span class="text1">Press A–J or tap the pads to activate/cancel chakra sounds.</span>
-            <span class="text2">Let each glow be a breath, a prayer, a pulse of energy.</span>
-        </p>
-        <section id="soundboard">
-            <ul class="keys">
-                <!--Crown Chakra-->
-                <li data-key="a" class="key" data-chakra="crown">
-                    <kbd>A</kbd>
-                    <span class="sound">Crown</span>
-                    <span class="countdown"></span>
-                </li>
-                <!--Third Eye Chakara-->
-                <li data-key="s" class="key" data-chakra="third-eye">
-                    <kbd>S</kbd>
-                    <span class="sound">Third Eye</span>
-                    <span class="countdown"></span>
-                </li>
-                <!--Throat Chakra-->
-                <li data-key="d" class="key" data-chakra="throat">
-                    <kbd>D</kbd>
-                    <span class="sound">Throat</span>
-                    <span class="countdown"></span>
-                </li>
-                <!--Heart Chakra-->
-                <li data-key="f" class="key" data-chakra="heart">
-                    <kbd>F</kbd>
-                    <span class="sound">Heart</span>
-                    <span class="countdown"></span>
-                </li>
-                <!--Solar Plexus Chakra-->
-                <li data-key="g" class="key" data-chakra="solar">
-                    <kbd>G</kbd>
-                    <span class="sound">Solar</span>
-                    <span class="countdown"></span>
-                </li>
-                <!--Sacral Chakra-->
-                <li data-key="h" class="key" data-chakra="sacral">
-                    <kbd>H</kbd>
-                    <span class="sound">Sacral</span>
-                    <span class="countdown"></span>
-                </li>
-                <!--Root Chakra-->
-                <li data-key="j" class="key" data-chakra="root">
-                    <kbd>J</kbd>
-                    <span class="sound">Root</span>
-                    <span class="countdown"></span>
-                </li>
-            </ul>
-        </section>
-    </main>
-    <footer class="footer">
-        <p>2026 | Created by: LaTorya Hoyle-Sadler for MCA powered by NeXT</p>
-    </footer>
+        <!-- Main content area that expands to fill available space -->
+        <main class="main">
+            <!-- Displays the logo at the top of the page -->
+            <h1 class="logo">
+                <!-- Loads the logo image from the assets folder -->
+                <img src="assets/images/logo.png" alt="logo">
+            </h1>
+            <!-- Shows two lines of text under the logo for instructions and theme -->
+            <p class="split-text">
+                <!-- First line of instructional text aligned to the right -->
+                <span class="text1">Press A–J or tap the pads to activate/cancel chakra sounds.</span>
+                <!-- Second line of poetic text aligned to the left -->
+                <span class="text2">Let each glow be a breath, a prayer, a pulse of energy.</span>
+            </p>
+            <!-- Container that holds the chakra soundboard grid -->
+            <section id="soundboard">
+                <!-- Unordered list that displays all chakra keys -->
+                <ul class="keys">
+                    <!-- Crown Chakra key mapped to the "A" key -->
+                    <li data-key="a" class="key" data-chakra="crown">
+                        <!-- Shows the keyboard letter for this chakra -->
+                        <kbd>A</kbd>
+                        <!-- Displays the chakra name under the letter -->
+                        <span class="sound">Crown</span>
+                        <!-- Shows the countdown timer when active -->
+                        <span class="countdown"></span>
+                    </li>
+
+                    <!-- Third Eye Chakra key mapped to the "S" key -->
+                    <li data-key="s" class="key" data-chakra="third-eye">
+                        <kbd>S</kbd>
+                        <span class="sound">Third Eye</span>
+                        <span class="countdown"></span>
+                    </li>
+
+                    <!-- Throat Chakra key mapped to the "D" key -->
+                    <li data-key="d" class="key" data-chakra="throat">
+                        <kbd>D</kbd>
+                        <span class="sound">Throat</span>
+                        <span class="countdown"></span>
+                    </li>
+
+                    <!-- Heart Chakra key mapped to the "F" key -->
+                    <li data-key="f" class="key" data-chakra="heart">
+                        <kbd>F</kbd>
+                        <span class="sound">Heart</span>
+                        <span class="countdown"></span>
+                    </li>
+
+                    <!-- Solar Plexus Chakra key mapped to the "G" key -->
+                    <li data-key="g" class="key" data-chakra="solar">
+                        <kbd>G</kbd>
+                        <span class="sound">Solar</span>
+                        <span class="countdown"></span>
+                    </li>
+
+                    <!-- Sacral Chakra key mapped to the "H" key -->
+                    <li data-key="h" class="key" data-chakra="sacral">
+                        <kbd>H</kbd>
+                        <span class="sound">Sacral</span>
+                        <span class="countdown"></span>
+                    </li>
+
+                    <!-- Root Chakra key mapped to the "J" key -->
+                    <li data-key="j" class="key" data-chakra="root">
+                        <kbd>J</kbd>
+                        <span class="sound">Root</span>
+                        <span class="countdown"></span>
+                    </li>
+                </ul>
+            </section>
+        </main>
+        <!-- Footer section that displays credits at the bottom -->
+        <footer class="footer">
+            <!-- Text inside the footer showing year and the creator's (my) information -->
+            <p>2026 | Created by: LaTorya Hoyle-Sadler for MCA powered by NeXT</p>
+        </footer>
     </section>
-    <!--Audio-->
+
+    <!-- AUDIO ELEMENTS — each audio tag loads a chakra sound file
+The data-key attribute links each sound to its matching key -->
+    <!-- Crown Chakra sound triggered by pressing "A" -->
     <audio data-key="a" src="assets/sounds/singing-bowl-crown.mp3"></audio>
+    <!-- Third Eye Chakra sound triggered by pressing "S" -->
     <audio data-key="s" src="assets/sounds/singing-bowl-third-eye.mp3"></audio>
+    <!-- Throat Chakra sound triggered by pressing "D" -->
     <audio data-key="d" src="assets/sounds/singing-bowl-throat.mp3"></audio>
+    <!-- Heart Chakra sound triggered by pressing "F" -->
     <audio data-key="f" src="assets/sounds/singing-bowl-heart.mp3"></audio>
+    <!-- Solar Plexus Chakra sound triggered by pressing "G" -->
     <audio data-key="g" src="assets/sounds/singing-bowl-solar-plexus.mp3"></audio>
+    <!-- Sacral Chakra sound triggered by pressing "H" -->
     <audio data-key="h" src="assets/sounds/singing-bowl-sacral.mp3"></audio>
+    <!-- Root Chakra sound triggered by pressing "J" -->
     <audio data-key="j" src="assets/sounds/singing-bowl-root.mp3"></audio>
+    <!-- Loads the JavaScript file so the soundboard works -->
     <script src="script.js"></script>
 </body>
 </html>

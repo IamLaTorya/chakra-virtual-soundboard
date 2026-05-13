@@ -1,193 +1,220 @@
 /* FUNCTION: playSound()
-Handles: glow, toggle mode, looping, countdown, fade-out */
+This function handles everything that happens when a key is pressed or tapped.
+It controls glow, toggle mode, looping, countdown, and fade-out. */
 function playSound(key) {
-
-    // Select the audio element that matches the pressed key
+    /* Finds the audio element that matches the key pressed.
+       This lets the function know which sound to play. */
     const audio = document.querySelector(`audio[data-key="${key}"]`);
-
-    // Select the visual <li> key element
+    /* Finds the visual button element that matches the key.
+       This lets the function update the glow and countdown. */
     const keyItem = document.querySelector(`li[data-key="${key}"]`);
-
-    // Select the countdown text inside the key
+    /* Finds the countdown text inside the key.
+       This is where the remaining seconds will appear. */
     const countdownDisplay = keyItem.querySelector('.countdown');
 
-    // Stop if the key or audio doesn't exist
+    /* Stops the function if the key pressed does not match a sound.
+       This prevents errors when pressing unrelated keys. */
     if (!audio || !keyItem) return;
-
-/* GLOW EFFECT — always flash when clicked */
-
-    // Add the glowing "playing" class
+    /* GLOW EFFECT — visual feedback */
+    /*clear any previous glow timeout so they do not stack*/
+    // clearTimeout(keyItem.glowTimeout);
+    /* Adds the glowing class to the key.
+       This makes the key light up when pressed. */
     keyItem.classList.add('playing');
+    /* Sets a timeout to remove the glow after 60 seconds.
+    //    This ensures the glow does not stay on indefinitely. */
+    // keyItem.glowTimeout = setTimeout(() => keyItem.classList.remove('playing'), 60000);
+    keyItem.classList.add('playing');
+    // /* Removes the glow after 60000ms.
+    //    This keeps the glow quick and responsive. */
+    // setTimeout(() => keyItem.classList.remove('playing'), 60000);
 
-    // Remove the glow after the animation finishes
-    setTimeout(() => keyItem.classList.remove('playing'), 100);
-
-/* TOGGLE MODE — if already looping, stop it */
+    /* TOGGLE MODE — turn sound off */
+    /* Checks if the sound is already looping.
+       If it is, pressing again will stop it. */
     if (audio.isLooping) {
-
-        // Stop the loop and reset visuals
-        stopLoop(audio, countdownDisplay);
-
-        // Do not start a new loop
+        /* Stops the loop and clears the countdown.
+           This turns the sound off immediately. */
+        stopLoop(audio, countdownDisplay, keyItem);
+        /* Exits the function so no new loop starts.
+           This completes the toggle-off action. */
         return;
     }
 
-/* START LOOPING — mark audio as active */
-
-    // Mark this audio as currently looping
+    /* START LOOPING — turn sound on */
+    /* Marks the audio as currently looping.
+       This helps the toggle system know its state. */
     audio.isLooping = true;
 
-    // Reset audio to the beginning
+    /* Resets the sound to the beginning.
+       This ensures it starts cleanly every time. */
     audio.currentTime = 0;
 
-    // Ensure full volume at start
+    /* Sets the volume to full before playing.
+       This ensures consistent sound each time. */
     audio.volume = 1;
 
-    // Play the sound immediately
+    /* Starts playing the sound immediately.
+       This begins the first loop cycle. */
     audio.play();
 
-/* 
-REAL‑TIME COUNTDOWN (no drift, no lag)
-Uses Date.now() + requestAnimationFrame() */
-
-    // Set the exact time when the loop should end (60 seconds)
+    /* REAL‑TIME COUNTDOWN — accurate timer with no drift */
+    /* Calculates the exact time when the loop should end.
+       This creates a precise 60-second timer. */
     const endTime = Date.now() + 60000;
-
-    // Function that updates the countdown smoothly
+    /* Updates the countdown text smoothly.
+       Uses real time so it stays accurate. */
     function updateCountdown() {
-
-        // Stop updating if the user toggles the sound off
+        /* Stops updating if the sound was toggled off.
+           This prevents the timer from running in the background. */
         if (!audio.isLooping) return;
-
-        // Calculate how many milliseconds remain
+        /* Calculates how much time is left in milliseconds.
+           Math.max prevents negative numbers. */
         const remaining = Math.max(0, endTime - Date.now());
-
-        // Convert remaining time to whole seconds
+        /* Converts the remaining time into whole seconds.
+           This is what the user sees on the key. */
         const seconds = Math.floor(remaining / 1000);
-
-        // Update the countdown text
-        countdownDisplay.textContent = `${seconds}s`;
-
-        // If time remains, keep updating every animation frame
+        /* Updates the countdown text on the key.
+           Shows the user how much time is left. */
+        countdownDisplay.textContent = `${seconds} s`;
+        /* If time is still left, update again on the next animation frame.
+           This keeps the countdown smooth and accurate. */
         if (remaining > 0) {
             requestAnimationFrame(updateCountdown);
-
-        // If time is up, clear the countdown
+            /* If time is up, clear the countdown text.
+               This signals that the loop has finished. */
         } else {
+            // Clear countdown text
             countdownDisplay.textContent = "";
-        }
-    }
-
-    // Start the countdown loop
-    updateCountdown();
-
-/* LOOP LOGIC — repeat audio until 60 seconds is up */
-
-    // Save the end time so loopAudio() can check it
-    audio.loopEndTime = endTime;
-
-    // Function that restarts the audio when it ends
-    function loopAudio() {
-
-        // Stop immediately if user toggled off
-        if (!audio.isLooping) return;
-
-        // If time is up, fade out and stop looping
-        if (Date.now() >= audio.loopEndTime) {
-
-            // Begin soft fade-out
-            fadeOut(audio);
-
-            // Mark as no longer looping
+            // Remove glow the instant the countdown hits zero
+            keyItem.classList.remove('playing');
+            // Stop looping immediately
             audio.isLooping = false;
-
-            // Remove countdown text
-            countdownDisplay.textContent = "";
-
-            return;
+            //Prevent loopAudio from restarting the sound
+            audio.onended = null;
+            // Begin fade-out smoothly
+            fadeOut(audio);
         }
-
-        // Restart the sound from the beginning
-        audio.currentTime = 0;
-        audio.play();
-
-        // When the sound ends, call loopAudio again
-        audio.onended = loopAudio;
     }
 
-    // Begin the looping process
-    loopAudio();
+
+/* Starts the countdown timer.
+   This begins the real-time updates. */
+updateCountdown();
+
+/* LOOP LOGIC — repeat sound until time runs out */
+/* Stores the end time on the audio object.
+   This lets loopAudio() know when to stop. */
+audio.loopEndTime = endTime;
+
+/* Handles restarting the sound each time it finishes.
+   This creates the looping effect. */
+function loopAudio() {
+    /* Stops looping if the user toggled the sound off.
+       This prevents unwanted repeats. */
+    if (!audio.isLooping) return;
+    /* Checks if the 60 seconds have passed.
+       If so, the loop should end. */
+    if (Date.now() >= audio.loopEndTime) {
+        /* Starts a soft fade-out for a smooth ending.
+           This avoids an abrupt stop. */
+        fadeOut(audio);
+        /* Marks the audio as no longer looping.
+           This resets the toggle state. */
+        audio.isLooping = false;
+        //Stop any glow timeout and remove glow immediately
+        audio.onended = null;
+        /* Clears the countdown text.
+           This visually shows the loop has ended. */
+        countdownDisplay.textContent = "";
+        // Remove glow when loop ends naturally
+        keyItem.classList.remove('playing');
+        // Clear the glow timeout
+        return;
+    }
+    /* Restarts the sound from the beginning.
+       This continues the loop cycle. */
+    audio.currentTime = 0;
+    audio.play();
+    /* When the sound finishes, call loopAudio again.
+       This keeps the loop going until time is up. */
+    audio.onended = loopAudio;
+}
+/* Starts the looping process.
+   This begins the repeated playback. */
+loopAudio();
 }
 
 /* FUNCTION: stopLoop()
-Stops looping immediately when user toggles off */
-function stopLoop(audio, countdownDisplay) {
-
-    // Mark audio as no longer looping
+Stops the sound immediately when toggled off */
+function stopLoop(audio, countdownDisplay, keyItem) {
+    /* Marks the audio as no longer looping.
+       This tells the system the sound is off. */
     audio.isLooping = false;
-
-    // Remove any pending loop callback
+    /* Removes any pending loop callback.
+       This prevents the sound from restarting. */
     audio.onended = null;
-
-    // Clear countdown text
+    /* Clears the countdown text.
+       This visually resets the key. */
     countdownDisplay.textContent = "";
-
-    // Stop audio instantly
+    /* Pauses the audio instantly.
+       This stops the sound right away. */
     audio.pause();
-
-    // Reset playback position
+    /* Resets the audio position to the start.
+       This prepares it for the next play. */
     audio.currentTime = 0;
-
-    // Optional: fade out instead of instant stop
+    /* Optional fade-out can be used instead of instant stop.
+       This creates a softer ending if enabled. */
     // fadeOut(audio);
+    // Remove the glow immediately when stopping
+    keyItem.classList.remove('playing');
 }
 
 /* FUNCTION: fadeOut()
-Softly reduces volume over time for a gentle stop */
+   Gradually lowers volume for a smooth stop */
 function fadeOut(audio) {
-
-    // Total fade-out duration (8 seconds)
+    /* Sets how long the fade-out lasts.
+       This creates a gentle 8-second fade. */
     let fadeDuration = 8000;
-
-    // How often to reduce volume (every 50ms)
+    /* Sets how often the volume decreases.
+       This creates small, smooth steps. */
     let fadeStep = 50;
-
-    // Amount of volume to subtract each step
+    /* Calculates how much volume to remove each step.
+       This ensures the fade is even. */
     let fadeAmount = audio.volume / (fadeDuration / fadeStep);
-
-    // Interval that gradually lowers the volume
+    /* Repeatedly lowers the volume until it reaches zero.
+       This creates the fading effect. */
     let fadeInterval = setInterval(() => {
-
-        // If volume is still above zero, reduce it
+        /* If there is still volume left, reduce it.
+           This slowly quiets the sound. */
         if (audio.volume - fadeAmount > 0) {
             audio.volume -= fadeAmount;
-
-        // Otherwise, stop completely
+            /* If volume is at zero, stop the sound completely.
+               This ends the fade-out cleanly. */
         } else {
             audio.volume = 0;
             audio.pause();
             clearInterval(fadeInterval);
         }
-
     }, fadeStep);
 }
 
-/* KEYBOARD SUPPORT — press A, S, D, etc. */
+/* KEYBOARD SUPPORT — allows A–J keys to trigger sounds*/
 window.addEventListener('keydown', function (event) {
-
-    // Convert key to lowercase so "A" and "a" both work
+    /* Converts the pressed key to lowercase.
+       This ensures both "A" and "a" work the same. */
     playSound(event.key.toLowerCase());
 });
 
-/* CLICK SUPPORT — tap or click a chakra key */
+/*CLICK SUPPORT — allows tapping keys on screen */
 document.querySelector('.keys').addEventListener('click', function (event) {
-
-    // Find the closest <li> with a data-key attribute
+    /* Finds the closest key element that was clicked.
+       This allows clicking on text or the box itself. */
     const keyItem = event.target.closest('li[data-key]');
-
-    // If the click wasn't on a key, do nothing
+    /* If the click wasn’t on a valid key, do nothing.
+       This prevents errors from clicking empty space. */
     if (!keyItem) return;
-
-    // Play the sound for that key
+    /* Plays the sound for the clicked key.
+       This makes the soundboard work with taps. */
     playSound(keyItem.dataset.key);
 });

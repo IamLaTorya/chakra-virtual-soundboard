@@ -21,5 +21,11 @@ A magical, mobile‑responsive soundboard that plays chakra‑aligned tones with
 
 ---
 
+## Future Features
+- **Record button - to record and store your own sound**
+- **Delete button - to be able to select and delete a sound**
+- **Other sound options - more sounds for deeper meditation**
+- **More time options - giving the user an option to increase or decrease countdown**
+
 ## Author
 - **LaTorya Hoyle-Sadler** Junior Full-Stack Engineer
